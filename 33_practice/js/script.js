@@ -15,12 +15,18 @@ P.S. Здесь есть несколько вариантов решения з
 
 5) Фильмы должны быть отсортированы по алфавиту */
 
-'use strict';
+// 'use strict';
 
 // Возьмите свой код из предыдущей практики
 
 document.addEventListener('DOMContentLoaded', () => {
-  'use strict';
+  const adv = document.querySelectorAll('.promo__adv img')
+  const poster = document.querySelector('.promo__bg')
+  const genre = poster.querySelector('.promo__genre')
+  const filmList = document.querySelector('.promo__interactive-list')
+  const addForm = document.querySelector('form.add')
+  const addInput = addForm.querySelector('.adding__input')
+  const checkbox = addForm.querySelector('[type="checkbox"]')
 
   const movieDB = {
     movies: [
@@ -32,26 +38,53 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
-  const promo = document.querySelectorAll('.promo__adv img')
-  const poster = document.querySelector('.promo__bg')
-  const genre = poster.querySelector('.promo__genre')
-  const filmList = document.querySelector('.promo__interactive-list')
+  createMovieList(movieDB.movies, filmList)
 
-  promo.forEach(el => el.remove())
+  console.log(movieDB.movies)
 
-  genre.textContent = "драмма"
 
-  poster.style.backgroundImage = 'url("img/bg.jpg")'
 
-  movieDB.movies.sort()
+  addForm.addEventListener('submit', (event) => {
+    event.preventDefault()
+    const newFilm = addInput.value
+    const favorite = checkbox.checked
 
-  filmList.innrHTML = ''
+    movieDB.movies.push(newFilm)
+    sortArr(movieDB.movies)
 
-  filmList.movies.forEach((film, i) => {
-    filmList.innerHTML += `
-    <li class="promo__integrative__item>${i + 1} ${film}
-      <div class="delete"></div>
-   </li>
-  `
+    createMovieList(movieDB.movies, filmList)
+    event.target.reset()
   })
+
+  const deleteAdv = (arr) => {
+    arr.forEach(el => { el.remove() })
+  }
+
+  const makeChange = () => {
+    genre.textContent = "драмма"
+    poster.style.backgroundImage = 'url("img/bg.jpg")'
+  }
+
+  const sortArr = (arr) => {
+    arr.sort()
+  }
+
+  function createMovieList(films, parent) {
+    parent.innerHTML = ""
+
+    films.forEach((film, i) => {
+      parent.innerHTML += `
+        <li class="promo__interactive-item">${i + 1} ${film}
+          <div class="delete"></div>
+        </li>
+     `
+    })
+  }
+
+  deleteAdv(adv)
+  makeChange()
+  sortArr(movieDB.movies)
+  // createMovieList(movieDB.movies, filmList)
+
+
 })
